@@ -1,0 +1,26 @@
+"""
+Задание 6.
+В программе генерируется случайное целое число от 0 до 100.
+Пользователь должен его отгадать не более чем за 10 попыток. После каждой
+неудачной попытки должно сообщаться больше или меньше введенное пользователем
+число, чем то, что загадано. Если за 10 попыток число не отгадано,
+то вывести загаданное число.
+Решите через рекурсию. В задании нельзя применять циклы.
+"""
+
+from random import randint
+
+
+def game(num_random=randint(0, 100),n=1):
+    num = (int(input('Please, enter your number: ')))
+    if num == num_random:
+        return print('WINNER')
+    elif n > 10:
+        return print(f'num_random = {num_random}')
+    elif num > num_random:
+        print('The number is too large!')
+    elif num < num_random:
+        print('the number is too small!')
+    game(num_random, n+1,)
+
+game()
