@@ -1,0 +1,212 @@
+"""
+Задача 3.
+В соответствии с документацией Python,
+deque – это обобщение стеков и очередей.
+Вот основное правило: если вам нужно
+что-то быстро дописать или вытащить, используйте deque.
+Если вам нужен быстрый случайный доступ, используйте list
+Задача: создайте простой список (list) и очередь (deque).
+Выполните различные операции с каждым из объектов.
+Сделайте замеры и оцените, насколько информация в документации
+соответствует дейстивтельности.
+1) сравнить операции
+append, pop, extend списка и дека и сделать выводы что и где быстрее
+2) сравнить операции
+appendleft, popleft, extendleft дека и соответствующих им операций списка
+и сделать выводы что и где быстрее
+3) сравнить операции получения элемента списка и дека
+и сделать выводы что и где быстрее
+Подсказка:
+для того, чтобы снизить погрешность, желательно операции по каждой ф-ции
+(append, pop и т.д.) проводить в циклах. Для замеров используйте timeit.
+"""
+"""
+1) сравнить операции
+append, pop, extend списка и дека и сделать выводы что и где быстрее
+"""
+
+from timeit import timeit
+import  collections
+
+
+my_list = ['a', 'b', 'c', 'd', 'e']
+my_deque = collections.deque('abcde')
+
+new_list = [1, 2, 3]
+
+
+def lst_app(lst):
+    for i in range(5):
+        lst.append(i)
+    return lst
+
+
+def deq_app(deq):
+    for i in range(5):
+        deq.append(i)
+    return deq
+
+
+print('Время выполнения list.append и deque.append: ')
+print(timeit('lst_app(my_list)', globals=globals()))
+print(timeit('deq_app(my_deque)', globals=globals()))
+
+"""
+Время выполнения list.append и deque.append: 
+1.6238195
+1.1905153
+Вывод: list.append выполняется медленнее, чем deque.append
+"""
+
+
+def lst_pop(lst):
+    for i in range(5):
+        lst.pop()
+    return lst
+
+
+def deq_pop(deq):
+    for i in range(5):
+        deq.pop()
+    return deq
+
+print('Время выполнения list.pop и deque.pop: ')
+print(timeit('lst_pop(my_list)', globals=globals()))
+print(timeit('deq_pop(my_deque)', globals=globals()))
+
+"""
+Время выполнения list.pop и deque.pop: 
+1.0465220000000004
+1.0490334000000008
+Вывод: list.pop и deque.pop выполняются с одинаковой скоростью
+"""
+
+def lst_extend(lst):
+    for i in range(5):
+        lst.extend(new_list)
+    return lst
+
+
+def deq_extend(deq):
+    for i in range(5):
+        deq.extend(new_list)
+    return deq
+
+
+print('Время выполнения list.extend и deque.extend: ')
+print(timeit('lst_extend(my_list)', globals=globals(), number=10))
+print(timeit('deq_extend(my_deque)', globals=globals(), number=10))
+
+"""
+Время выполнения list.extend и deque.extend: 
+2.089999999999037e-05
+2.250000000003638e-05
+Вывод: list.extend выполняется быстрее, чем deque.extend
+"""
+
+"""
+2) сравнить операции
+appendleft, popleft, extendleft дека и соответствующих им операций списка
+и сделать выводы что и где быстрее
+"""
+
+
+def lst_appendleft(lst):
+    for i in range(5):
+        lst.insert(0, i)
+    return lst
+
+
+def deq_appendleft(deq):
+    for i in range(5):
+        deq.appendleft(i)
+    return deq
+
+
+print('Время выполнения list.insert(0) и deque.appendleft: ')
+print(timeit('lst_appendleft(my_list)', globals=globals(), number=1000))
+print(timeit('deq_appendleft(my_deque)', globals=globals(), number=1000))
+
+"""
+Время выполнения list.insert(0) и deque.appendleft: 
+0.019352500000000106
+0.0012329000000006474
+Вывод: list.insert(0) выполняется медленнее, чем deque.appendleft
+"""
+
+
+def lst_popleft(lst):
+    for i in range(5):
+        lst.pop(0)
+    return lst
+
+def deq_popleft(deq):
+    for i in range(5):
+        deq.popleft()
+    return deq
+
+print('Время выполнения list.pop(0) и deque.popleft: ')
+print(timeit('lst_popleft(my_list)', globals=globals(), number=1000))
+print(timeit('deq_popleft(my_deque)', globals=globals(), number=1000))
+
+"""
+Время выполнения list.pop(0) и deque.popleft: 
+0.008328399999999903
+0.0010495000000005916
+Вывод: list.pop(0) выполняется медленнее, чем deque.popleft
+"""
+
+
+def lst_extendleft(lst):
+    for i in range(5):
+        for i in new_list:
+            my_list.insert(0, i)
+    return lst
+
+
+def deq_extendleft(deq):
+    for i in range(5):
+        my_deque.extendleft(new_list)
+    return deq
+
+
+print('Время выполнения list.extendleft и deque.extendleft: ')
+print(timeit('lst_extendleft(my_list)', globals=globals(), number=1000))
+print(timeit('deq_extendleft(my_deque)', globals=globals(), number=1000))
+
+"""
+Время выполнения list.extendleft и deque.extendleft: 
+0.15516439999999943
+0.0018441999999998515
+Вывод: list.extendleft выполняется медленнее, чем deque.extendleft
+"""
+
+"""
+3) сравнить операции получения элемента списка и дека
+и сделать выводы что и где быстрее
+"""
+
+
+def lst_el(lst):
+    for i in range(2):
+        lst[i] = i
+
+def deq_el(deq):
+    for i in range(2):
+        deq[i] = i
+
+
+print('Время выполнения list[i] и deque[i]: ')
+print(timeit('lst_el(my_list)', globals=globals()))
+print(timeit('deq_el(my_deque)', globals=globals()))
+
+"""
+Время выполнения list[i] и deque[i]: 
+0.7116559999999996
+0.7092552000000003
+Вывод: list[i] выполняется медленнее, чем deque[i]
+"""
+
+"""
+Вывод: большенство аналогичных действий в deque и в list, выполняются быстрее в deque.
+"""
