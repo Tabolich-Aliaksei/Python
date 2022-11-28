@@ -1,0 +1,59 @@
+"""
+Задача 4.
+Создайте обычный словарь и упорядоченный словарь OrderedDict.
+Выполните операции, равные по смыслу, с каждым из словарей и сделайте замеры.
+Опишите полученные результаты, сделайте выводы
+И есть ли смысл исп-ть OrderedDict в Python 3.6 и более поздних версиях
+"""
+
+from timeit import timeit
+from collections import OrderedDict
+
+my_dict = {}
+my_ordered_dict = OrderedDict()
+
+
+def func_dict(dct):
+    for i in range(100):
+        dct[i] = i
+
+
+def func_ordered_dict(ord_dct):
+    for i in range(100):
+        ord_dct[i] = i
+
+func_dict(my_dict)
+func_ordered_dict(my_ordered_dict)
+
+print(timeit('func_dict(my_dict)', globals=globals(), number=10))
+print(timeit('func_ordered_dict(my_ordered_dict)', globals=globals(), number=10))
+
+"""
+1.513792
+1.9330783000000002
+Обычный словарь заполняется элементами быстрее, чем OrderedDict. 
+"""
+
+
+def pop_dict(dct):
+    for i in range(100):
+        dct.pop(i)
+
+
+def pop_ordered_dict(ord_dct):
+    for i in range(100):
+        ord_dct.pop(i)
+
+
+print(timeit('pop_dict(my_dict)', globals=globals(), number=10))
+print(timeit('pop_ordered_dict(my_ordered_dict)', globals=globals(), number=10))
+
+"""
+При выполнении операци изменения, итерации и присваивания обычный словарь 
+работает гораздо быстрее, чем OrderedDict.
+Начиная с версии Python 3.6 обычный словарь также поддерживает запоминание 
+порядка добавления пар ключ-значение. Таким
+образом в настоящее время использование OrderedDict оправдано, 
+если нужны только специфичные для него функции,
+такие как move_to_end(key, last=True), popitem(last=True).
+"""
