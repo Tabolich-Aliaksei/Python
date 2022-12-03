@@ -1,0 +1,87 @@
+"""
+Урок 3.
+Задание 4.
+Реализуйте скрипт "Кэширование веб-страниц"
+Функция должна принимать url-адрес и проверять
+есть ли в кэше соответствующая страница или нет
+Пример кэша: {'url-адрес': 'хеш url-а'; 'url-адрес': 'хеш url-а'; ...}
+Если страница в кэше есть, просто вернуть значение хеша, например, 'хеш url-а'
+Если страницы в кэше нет, то вычислить хеш и записать в кэш
+Подсказка: задачу решите обязательно с применением 'соленого' хеширования
+и одного из алгоритмов, например, sha512
+Можете усложнить задачу, реализовав ее через ООП
+
+
+import hashlib
+
+cash = {}
+salt = 'my_salt'
+
+
+def hash_cash_url(url):
+    if url in cash:
+        print(hashlib.sha512(salt.encode() + url.encode()).hexdigest())
+    else:
+        cash[url] = (hashlib.sha512(salt.encode() + url.encode()).hexdigest())
+
+
+hash_cash_url('www.gb.ru')
+print(cash)
+"""
+
+import hashlib
+from memory_profiler import memory_usage
+from json import loads, dumps
+
+s = 'papa'
+
+
+def decor(func):
+    def wrapper(*args, **kwargs):
+        m1 = memory_usage()
+        res = func(args[0])
+        m2 = memory_usage()
+        mem_diff = m2[0] - m1[0]
+        return res, mem_diff
+    return wrapper
+
+
+cash = {}
+salt = 'my_salt'
+
+
+@decor
+def hash_cash_url(url):
+    if url in cash:
+        print(hashlib.sha512(salt.encode() + url.encode()).hexdigest())
+    else:
+        cash[url] = (hashlib.sha512(salt.encode() + url.encode()).hexdigest())
+
+
+if __name__ == '__main__':
+    res, mem_diff = hash_cash_url('www.gb.ru')
+    print(f'for in: {mem_diff} Mib')
+
+
+@decor
+def hash_cash_url_2(url):
+    if url in cash:
+        print(hashlib.sha512(salt.encode() + url.encode()).hexdigest())
+    else:
+        cash[url] = (hashlib.sha512(salt.encode() + url.encode()).hexdigest())
+    cash_dumps = dumps(cash)
+    loads_dumps = loads(cash_dumps)
+
+if __name__ == '__main__':
+    res, mem_diff = hash_cash_url_2('www.nb.ru')
+    print(f'Сериализация: {mem_diff} Mib')
+
+
+"""
+Оптимизация задачи произведенна за счет сериализации словаря.
+for in: 0.01953125 Mib
+Сериализация: 0.00390625 Mib
+Выполнение задачи происходит с меньшим количеством задействованной памяти,
+при использовании сериализации.
+Экономия происхолдит за счет преообразования словаря в строку.
+"""

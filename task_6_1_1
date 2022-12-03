@@ -1,0 +1,92 @@
+"""
+Урок 1.
+Задание 2.
+Реализуйте два алгоритма.
+Оба должны обеспечивать поиск минимального значения для списка.
+Сложность первого алгоритма должна быть O(n^2) - квадратичная.
+Сложность второго алгоритма должна быть O(n) - линейная.
+Примечание: ПРОШУ ВАС ВНИМАТЕЛЬНО ЧИТАТЬ ЗАДАНИЕ!
+-- нельзя использовать встроенные функции min() и sort()
+-- каждый из двух алгоритмов нужно оформить в виде отдельной ф-ции
+-- проставьте сложности каждого выражения в двух ваших алгоритмах
+
+my_list = [1, 44, 23, 67, 777, 0, -5]
+
+# O(n ** 2)
+
+
+def number_1(lst):                       # O(1)
+    for i in lst:                        # O(n)
+        num_min = True                   # O(1)
+        for j in lst:                    # O(n)
+            if i > j:                    # O(1)
+                num_min = False          # O(1)
+        if num_min:                      # O(1)
+            return                       # O(1)
+
+
+print(number_1(my_list))                 # O(1)
+
+
+# O(n)
+
+
+def number_2(lst):                       # O(1)
+    min_value = lst[0]                   # O(1)
+    for i in lst:                        # O(n)
+        if i < min_value:                # O(1)
+            min_value = i                # O(1)
+    return min_value                     # O(1)
+
+
+print(number_2(my_list))                 # O(1)
+
+"""
+
+from memory_profiler import memory_usage
+
+def decor(func):
+    def wrapper(*args, **kwargs):
+        m1 = memory_usage()
+        res = func(args[0])
+        m2 = memory_usage()
+        mem_diff = m2[0] - m1[0]
+        return res, mem_diff
+    return wrapper
+
+my_list = list(range(1000000))
+
+
+@decor
+def number_2(lst):
+    min_value = lst[0]
+    for i in lst:
+        if i < min_value:
+            min_value = i
+    return min_value
+
+if __name__ == '__main__':
+    res, mem_diff = number_2(my_list)
+    print(f'for in: {mem_diff} Mib')
+
+
+@decor
+def number_gen(lst):
+    min_value = lst[0]
+    for i in lst:
+        if i < min_value:
+            min_value = i
+    yield min_value
+
+if __name__ == '__main__':
+    res, mem_diff = number_gen(my_list)
+    print(f'generator: {mem_diff} Mib')
+
+"""
+Оптимизация задачи произведенна за счет замены цикла for in на генератор.
+for in: 0.00390625 Mib
+generator: 0.0 Mib
+Выполнение задачи происходит с меньшим количеством задействованной памяти,
+при использовании генератора.
+Так как генератор возвращает эелементы один за одним, в отличии от for in который возвращает элементы массивом.
+"""

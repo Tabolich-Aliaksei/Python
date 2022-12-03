@@ -1,0 +1,87 @@
+"""
+Урок 2.
+Задание 2.
+Подсчитать четные и нечетные цифры введенного натурального числа.
+Например, если введено число 34560, то у него 3 четные цифры
+(4, 6 и 0) и 2 нечетные (3 и 5).
+Подсказка:
+На каждом шаге вам нужно 'доставать' из числа очередную цифру
+и смотреть является ли она четной или нечетной.
+При этом увеличиваем соответствующий счетчик
+Пока все числа не извлечены, рекурсивные вызовы продолжаем
+Условие завершения рекурсии - все числа извлечены
+Используем операции % //. Операции взятия по индексу применять нельзя.
+Решите через рекурсию. В задании нельзя применять циклы.
+Пример:
+Введите число: 123
+Количество четных и нечетных цифр в числе равно: (1, 2)
+
+def count_numbers(num, even_num=0, odd_num=0):
+    if num == 0:
+        return print(f'Четных чисел: {even_num}, нечетных чисел: {odd_num}')
+    rem = num % 10
+    if rem % 2 == 0:
+        even_num += 1
+    else:
+        odd_num += 1
+    count_numbers(num//10, even_num, odd_num)
+
+
+count_numbers(123456789)
+"""
+
+from memory_profiler import memory_usage
+
+def decor(func):
+    def wrapper(*args, **kwargs):
+        m1 = memory_usage()
+        res = func(args[0])
+        m2 = memory_usage()
+        mem_diff = m2[0] - m1[0]
+        return res, mem_diff
+    return wrapper
+
+
+my_list = list(range(100))
+
+def count_numbers(num, even_num=0, odd_num=0):
+    if num == 0:
+        return print(f'Четных чисел: {even_num}, нечетных чисел: {odd_num}')
+    rem = num % 10
+    if rem % 2 == 0:
+        even_num += 1
+    else:
+        odd_num += 1
+    count_numbers(num//10, even_num, odd_num)
+
+@decor
+def func_1(lst):
+    for i in lst:
+        count_numbers(i)
+
+if __name__ == '__main__':
+    res, mem_diff = func_1(my_list)
+    print(f'for in: {mem_diff} Mib')
+
+
+@decor
+def func_2(lst):
+    return  map(count_numbers, lst)
+
+
+if __name__ == '__main__':
+    res, mem_diff = func_2(my_list)
+    print(f'map: {mem_diff} Mib')
+
+
+"""
+Если выполнять даннуюзадачу не для одного числа, а для массива чисел, тогда:
+оптимизация задачи произведенна за счет замены цикла for in на функцию map().
+for in: 0.01171875 Mib
+map: 0.0 Mib
+Выполнение задачи происходит с меньшим количеством задействованной памяти,
+при использовании map().
+Значительная экономия памяти происходит с увеличением количества данных. 
+"""
+"""
+# Пятый вариант улучшения не смог найти.  2 задание не не решил
