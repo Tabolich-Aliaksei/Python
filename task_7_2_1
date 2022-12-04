@@ -1,0 +1,51 @@
+"""
+Задание 2. Массив размером 2m + 1, где m – натуральное число,
+заполнен случайным образом. Найдите в массиве медиану.
+Медианой называется элемент ряда, делящий его на
+две равные по длине части:
+в одной находятся элементы,
+которые не меньше медианы,
+в другой – не больше медианы.
+Решите задачу тремя способами:
+1) с помощью сортировки, которую мы не рассматривали на уроке (Гномья, Шелла,
+Кучей)
+сделайте замеры на массивах длиной 10, 100, 1000 элементов
+"""
+
+from timeit import timeit
+from random import randint
+
+
+def median(lst, m):
+    n = len(lst)
+    i = 0
+    while i + 1 < n:
+        if lst[i + 1] >= lst[i]:
+            i += 1
+        else:
+            lst[i], lst[i + 1] = lst[i + 1], lst[i]
+            if i > 0:
+                i -= 1
+            else:
+                i += 1
+    mdn = lst[m]
+    return mdn
+
+
+m = 10
+
+my_list_10 = [randint(-100, 100) for _ in range(2 * m + 1)]
+
+print(timeit('median(my_list_10[:], m)', globals=globals(), number=1000))
+
+m = 100
+
+my_list_100 = [randint(-100, 100) for _ in range(2 * m + 1)]
+
+print(timeit('median(my_list_100[:], m)', globals=globals(), number=1000))
+
+m = 1000
+
+my_list_1000 = [randint(-100, 100) for _ in range(2 * m + 1)]
+
+print(timeit('median(my_list_1000[:], m)', globals=globals(), number=1000))
