@@ -25,7 +25,7 @@ def max_profit_1(dct):
     for val in firms.values():            # O(n)
         my_list.append(val)               # O(1)
         my_list.sort(reverse=True)        # O(n log n)
-    for i in my_list[0:3]:                # O(n)
+    for i in my_list[0:3]:                # O(1)
         for key, val in firms.items():    # O(n)
             if i == val:                  # O(1)
                 print(key)                # O(1)
